@@ -1,0 +1,195 @@
+building website
+ <!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Skyline Buildings — Modern Building Listings</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#94a3b8;--accent:#06b6d4;--glass:rgba(255,255,255,0.04)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:linear-gradient(180deg,#0b1220 0%, #111827 100%);color:#e6eef7;line-height:1.45}
+    header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;background:transparent}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700}
+    nav a{color:var(--muted);margin-left:18px;text-decoration:none}
+    .hero{padding:48px 24px;display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+    .hero-left h1{font-size:28px;margin:0 0 12px}
+    .hero-left p{color:var(--muted);margin:0 0 18px}
+    .search{display:flex;gap:8px;background:var(--glass);padding:10px;border-radius:10px}
+    .search input{flex:1;padding:10px;border:0;background:transparent;color:inherit}
+    .btn{background:var(--accent);border:0;padding:10px 14px;border-radius:8px;color:#062022;font-weight:600;cursor:pointer}
+    .hero-right{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:12px}
+    .stats{display:flex;gap:18px;justify-content:space-between}
+    .stat{background:var(--card);padding:12px;border-radius:10px;text-align:center}
+    .grid{padding:8px 24px 48px;max-width:1100px;margin:0 auto}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    .card img{width:100%;height:160px;object-fit:cover;display:block}
+    .card-body{padding:12px}
+    .title{font-weight:700;margin:0 0 6px}
+    .meta{color:var(--muted);font-size:14px;margin-bottom:8px}
+    .card-footer{display:flex;justify-content:space-between;align-items:center;padding:12px;border-top:1px solid rgba(255,255,255,0.03)}
+    .price{font-weight:700}
+    .pill{background:rgba(0,0,0,0.25);padding:6px 8px;border-radius:999px;font-size:13px}
+    form.contact{background:var(--card);padding:16px;border-radius:12px;margin-top:16px}
+    form input,form textarea{width:100%;padding:10px;border-radius:8px;border:0;background:transparent;color:inherit;margin-bottom:8px}
+    footer{padding:24px;text-align:center;color:var(--muted)}
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center}
+    .modal{background:#0b1220;border-radius:12px;max-width:760px;width:94%;overflow:hidden}
+    .modal .modal-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .modal .modal-body{padding:16px;display:grid;grid-template-columns:1fr 320px;gap:12px}
+    .gallery img{width:100%;height:180px;object-fit:cover;border-radius:8px}
+    @media (max-width:900px){.hero{grid-template-columns:1fr;}.modal .modal-body{grid-template-columns:1fr}.hero-right{order:2}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">SB</div>
+      <div>
+        <div style="font-weight:700">Skyline Buildings</div>
+        <div style="font-size:12px;color:var(--muted)">Find modern apartments & offices</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#">Listings</a>
+      <a href="#contact">Contact</a>
+      <a href="#">About</a>
+    </nav>
+  </header>  <section class="hero">
+    <div class="hero-left">
+      <h1>Modern buildings — find your next space</h1>
+      <p class="muted">Browse curated apartments and commercial spaces. Filter by price, bedrooms, and location — fast and mobile-first.</p><div class="search">
+    <input id="q" placeholder="Search city, neighborhood, or ID" />
+    <select id="type">
+      <option value="any">Any type</option>
+      <option value="apt">Apartment</option>
+      <option value="office">Office</option>
+    </select>
+    <button class="btn" onclick="filterCards()">Search</button>
+  </div>
+
+  <div style="margin-top:18px"><strong>Featured</strong></div>
+  <div style="margin-top:10px;color:var(--muted)">Newly listed modern properties start from affordable to premium — click a card to view details.</div>
+</div>
+
+<aside class="hero-right">
+  <div class="stats">
+    <div class="stat"><div style="font-size:20px">128</div><div style="font-size:12px;color:var(--muted)">Listings</div></div>
+    <div class="stat"><div style="font-size:20px">24</div><div style="font-size:12px;color:var(--muted)">Cities</div></div>
+    <div class="stat"><div style="font-size:20px">5.0★</div><div style="font-size:12px;color:var(--muted)">Avg Rating</div></div>
+  </div>
+
+  <form class="contact" id="contactForm" onsubmit="sendContact(event)">
+    <h3 style="margin:0 0 8px">Contact an agent</h3>
+    <input id="name" placeholder="Your name" required />
+    <input id="email" placeholder="Email" type="email" required />
+    <textarea id="message" rows="3" placeholder="Message"></textarea>
+    <button class="btn" style="width:100%">Send</button>
+  </form>
+</aside>
+
+  </section>  <main class="grid">
+    <h2 style="margin:12px 0">Available Properties</h2>
+    <div class="cards" id="cards">
+      <!-- Cards inserted by JS for brevity -->
+    </div>
+  </main>  <footer id="contact">
+    © <span id="year"></span> Skyline Buildings • Built with Acode
+  </footer>  <!-- modal -->  <div class="modal-backdrop" id="backdrop" onclick="closeModal(event)">
+    <div class="modal" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <div class="modal-header"><div><strong id="m-title"></strong><div style="font-size:13px;color:var(--muted)" id="m-sub"></div></div><button onclick="closeModal()" class="btn" style="background:transparent;color:var(--accent);border:1px solid rgba(255,255,255,0.04)">Close</button></div>
+      <div class="modal-body">
+        <div>
+          <div class="gallery" id="m-gallery"></div>
+          <p id="m-desc" style="color:var(--muted)"></p>
+        </div>
+        <div>
+          <div style="background:var(--glass);padding:12px;border-radius:10px">
+            <div style="font-weight:700" id="m-price"></div>
+            <div style="color:var(--muted);margin:8px 0" id="m-meta"></div>
+            <button class="btn" style="width:100%" onclick="contactAbout()">Contact about this</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  <script>
+    const data = [
+      {id:1,title:'Oceanview Tower Apt',type:'apt',city:'Lagos',price:'₦45,000,000',beds:3,area:'120 sqm',img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=60',desc:'A modern 3-bedroom apartment with sea views, balcony, and secure parking.'},
+      {id:2,title:'Central Business Office',type:'office',city:'Abuja',price:'₦120,000,000',beds:0,area:'450 sqm',img:'https://images.unsplash.com/photo-1505691723518-34d4b6b7d2a2?auto=format&fit=crop&w=800&q=60',desc:'Spacious premium office in the business district with fitted workspaces.'},
+      {id:3,title:'Riverside Loft',type:'apt',city:'Port Harcourt',price:'₦65,000,000',beds:2,area:'90 sqm',img:'https://images.unsplash.com/photo-1549187774-b4e9b0445b98?auto=format&fit=crop&w=800&q=60',desc:'Industrial-style loft with high ceilings and river views.'},
+      {id:4,title:'Greenfield Estate House',type:'apt',city:'Ibadan',price:'₦85,000,000',beds:4,area:'210 sqm',img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=60',desc:'Family home in a gated estate with garden and garage.'},
+      {id:5,title:'Studio Downtown',type:'apt',city:'Enugu',price:'₦18,000,000',beds:1,area:'45 sqm',img:'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=60',desc:'Cozy studio ideal for singles or young professionals.'},
+      {id:6,title:'Skyline Retail Space',type:'office',city:'Kano',price:'₦40,000,000',beds:0,area:'80 sqm',img:'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=800&q=60',desc:'Ground-floor retail unit with high foot traffic.'}
+    ];
+
+    function renderCards(list){
+      const container = document.getElementById('cards');
+      container.innerHTML = '';
+      list.forEach(p=>{
+        const div = document.createElement('div');div.className='card';
+        div.innerHTML = `
+          <img src="${p.img}" alt="${p.title}" loading="lazy" />
+          <div class="card-body">
+            <div class="title">${p.title}</div>
+            <div class="meta">${p.city} • ${p.area} • ${p.beds ? p.beds+' beds' : 'Commercial'}</div>
+          </div>
+          <div class="card-footer">
+            <div class="price">${p.price}</div>
+            <div><button class="pill" onclick="openModal(${p.id})">View</button></div>
+          </div>`;
+        container.appendChild(div);
+      })
+    }
+
+    function openModal(id){
+      const item = data.find(d=>d.id===id);
+      if(!item) return;
+      document.getElementById('m-title').textContent = item.title;
+      document.getElementById('m-sub').textContent = item.city + ' • ' + item.area;
+      document.getElementById('m-price').textContent = item.price;
+      document.getElementById('m-meta').textContent = (item.beds? item.beds+' beds • ':'') + (item.type==='office' ? 'Commercial' : 'Residential');
+      document.getElementById('m-desc').textContent = item.desc;
+      document.getElementById('m-gallery').innerHTML = `<img src="${item.img}" alt="${item.title}" />`;
+      document.getElementById('backdrop').style.display='flex';
+      window.location.hash = '#modal';
+    }
+    function closeModal(e){
+      document.getElementById('backdrop').style.display='none';
+      if(location.hash==='#modal') history.replaceState('', document.title, window.location.pathname + window.location.search);
+    }
+
+    function contactAbout(){
+      alert('Opening contact form — copy property details into your message.');
+      closeModal();
+      document.getElementById('name').focus();
+    }
+
+    function sendContact(e){
+      e.preventDefault();
+      const name=document.getElementById('name').value.trim();
+      const email=document.getElementById('email').value.trim();
+      // In a real site, send to server. Here we just simulate success.
+      alert('Thanks '+name+"! Your message was sent. We'll contact you at "+email);
+      e.target.reset();
+    }
+
+    function filterCards(){
+      const q=document.getElementById('q').value.toLowerCase();
+      const type=document.getElementById('type').value;
+      const res = data.filter(d=>{
+        const matchQ = !q || (d.title+d.city+d.desc).toLowerCase().includes(q);
+        const matchType = type==='any' || d.type===type;
+        return matchQ && matchType;
+      });
+      renderCards(res);
+    }
+
+    // init
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderCards(data);
+  </script></body>
+</html>
